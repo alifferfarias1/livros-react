@@ -42,7 +42,7 @@ body {
   background-color: #f0f0f0;
 }
 thead{
-  background-color: #282c34;
+  background-color: #0b0c0e;
   color: white;
 }
 
@@ -57,3 +57,18 @@ th, td {
   padding: 8px;
   text-align: left;
 }
+tbody tr:nth-child(odd) {
+  background-color: #adabab; /* Cor de fundo para linhas ímpares */
+}
+button{
+  background-color: rgb(206, 52, 52);
+  border: none;
+  padding: 5px;
+  margin: 3px;
+  border-radius: 3px;
+}
+button:hover{
+  border: none;
+  border: 1px solid rgba(0, 0, 0, 0.789);
+}
+

@@ -1,44 +1,47 @@
-// LivroLista.js
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useMemo  } from 'react';
 import ControleLivros from './controle/ControleLivro';
 import ControleEditora from './controle/ControleEditora';
-
-
 
 const LinhaLivro = ({ livro, excluir }) => {
     const nomeEditora = new ControleEditora().getNomeEditora(livro.codEditora);
 
     return (
         <tr>
-            <td>{livro.titulo}
-            </td>
+            <td>{livro.titulo}</td>
             <td>{nomeEditora}</td>
-            <td>{livro.resumo}</td>
-            <td>{livro.autores.join(", ")}</td>
-            <button onClick={() => excluir(livro.codigo)}>Excluir</button>
-
-
+            <td>
+                <button onClick={() => excluir(livro.codigo)}>Excluir</button>
+            </td>
         </tr>
     );
 };
 
-
 const LivroLista = () => {
     const [livros, setLivros] = useState([]);
     const [carregado, setCarregado] = useState(false);
-
-    const controleLivro = new ControleLivros();
-
+    const [bookAdded, setBookAdded] = useState(false); // New state variable
+ 
+    // Usando useMemo para memoizar a instância de ControleLivros
+    const controleLivro = useMemo(() => new ControleLivros(), []);
+ 
     useEffect(() => {
-        setLivros(controleLivro.obterLivros());
-        setCarregado(true);
-     }, [carregado, controleLivro]);
-     
-
-    const excluir = codigo => {
-        controleLivro.excluir(codigo);
+        const obterLivros = async () => {
+            setLivros(await controleLivro.obterLivros());
+            setCarregado(true);
+        };
+ 
+        obterLivros();
+    }, [carregado, controleLivro, bookAdded]); // Include bookAdded in the dependency array
+ 
+    const excluir = async (codigo) => {
+        await controleLivro.excluir(codigo);
         setCarregado(false);
     };
+ 
+    // Update bookAdded state when a book is added
+    useEffect(() => {
+        setBookAdded(prev => !prev);
+    }, [controleLivro]);
 
     return (
         <main>
@@ -48,8 +51,6 @@ const LivroLista = () => {
                     <tr>
                         <th>Título</th>
                         <th>Editora</th>
-                        <th>Resumo</th>
-                        <th>Autores</th>
                         <th>Ações</th>
                     </tr>
                 </thead>
