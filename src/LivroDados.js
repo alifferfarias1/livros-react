@@ -47,7 +47,6 @@ const LivroDados = () => {
      
         // Update carregado state in LivroLista component
         
-        setCarregado(prev => !prev);
      
         // Navegar de volta para a lista de livros
         navigate('/');
